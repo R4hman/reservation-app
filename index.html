@@ -4,15 +4,85 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <script defer src="date-picker.js" type="module"></script>
     <script defer src="index.js" type="module"></script>
     <title>Online Booking Reservation</title>
   </head>
   <body>
+    <div class="modal-overlay">
+      <div class="modal-content">COnfirm</div>
+    </div>
     <section class="container">
       <div class="navigation"></div>
       <div class="main-content">
         <header class="main-content__header"></header>
-        <div class="main-content__result"></div>
+        <div class="main-content_switch">
+          <div
+            data-name="date"
+            id="date"
+            class="option main-content__date main-left__part"
+          >
+            <div class="main-content-left">
+              <div class="date-picker-container">
+                <div class="show-current-month-container">
+                  <span class="prev-month">
+                    <!-- &#10216; -->
+                    &#8592;
+                  </span>
+                  <span class="current-month">current-month</span>
+                  <span class="next-month">
+                    <!-- &#10217; -->
+                    &#8594;
+                  </span>
+                </div>
+                <div class="date-container">
+                  <div class="week-days">
+                    <div class="sun">
+                      Sun
+
+                      <span class="sun-container"></span>
+                    </div>
+                    <div class="mon">
+                      Mon
+                      <span class="mon-container"></span>
+                    </div>
+                    <div class="tue">
+                      Tue
+
+                      <span class="tue-container"></span>
+                    </div>
+                    <div class="wed">
+                      Wed
+
+                      <span class="wed-container"></span>
+                    </div>
+                    <div class="thu">
+                      Thu
+                      <span class="thu-container"></span>
+                    </div>
+                    <div class="fri">
+                      Fri
+                      <span class="fri-container"></span>
+                    </div>
+                    <div class="sat">
+                      Sat
+                      <span class="sat-container"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="main-right__part">
+              <h3>Time</h3>
+              <div class="selection-time">
+                <h4>Select Date</h4>
+                <div class="available-times"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="main-content__result"></div>
+        </div>
         <footer class="main-content__footer">
           <!-- <button class="btn next-btn">NEXT</button> -->
           <button class="btn back-btn">BACK</button>

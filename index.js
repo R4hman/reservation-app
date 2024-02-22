@@ -6,6 +6,8 @@ const selectBtn = document.querySelector(".select-btn");
 const main = document.querySelector(".main-content__result");
 
 import { staffs } from "./data.js";
+import { initDatePicker } from "./date-picker.js";
+// import { initDatePicker } from "./date-picker.js";
 
 import { mainContent } from "./utils.js";
 
@@ -15,9 +17,9 @@ const navLists = [
   { name: "Date & Time", step: 3, keyword: "date" },
   { name: "Confirmation", step: 4, keyword: "" },
 ];
-let step = 1;
+export let step = 1;
 let keyword = "service_id";
-const info = {
+export const info = {
   customer: {},
   date: "",
   service_id: null,
@@ -70,7 +72,7 @@ function navClick() {
   nextBtn.addEventListener("click", nextStep);
 }
 
-function init() {
+export function init() {
   navLists.map((item, i) => {
     const div = document.createElement("div");
     const span = document.createElement("span");
@@ -79,15 +81,17 @@ function init() {
     div.innerHTML = `${span.outerHTML} ${item.name}`;
 
     div.classList.add("nav-item");
-    i === 0 && div.classList.add("active");
+    if (i === 0) {
+      div.classList.add("active");
+      mainHeader.innerHTML = `Select ${item.name}`;
+    }
     navigation.insertAdjacentElement("beforeend", div);
-    mainHeader.innerHTML = `Select ${item.name}`;
     mainContent("staff_id");
   });
   navClick();
 }
 
-function switchActiveNav() {
+export function switchActiveNav(step) {
   const elements = document.querySelectorAll(".nav-item");
   const activeNav = document.querySelector(".active");
   console.log("el", activeNav);
@@ -102,7 +106,6 @@ function switchActiveNav() {
 function select(e) {
   if (e.target.closest(".option")) {
     const el = e.target.closest(".option");
-    console.log("name", el.dataset.name);
     const activeOption = document.querySelector(".active-option");
     if (activeOption) {
       activeOption.classList.remove("active-option");
@@ -110,12 +113,13 @@ function select(e) {
     el.classList.add("active-option");
     info[el.dataset.name] = el.dataset.id;
 
-    console.log("info", info);
     step++;
     keyword = navLists.find((item) => item.step === step).keyword;
-
+    const name = navLists.find((item) => item.keyword === keyword).name;
+    mainHeader.innerHTML = `Select ${name}`;
     mainContent(keyword);
-    switchActiveNav();
+
+    switchActiveNav(step);
     // nextStep(step);
   }
 }
