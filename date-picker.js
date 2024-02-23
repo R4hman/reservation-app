@@ -1,4 +1,4 @@
-import { info, step } from "./index.js";
+import { info, step, switchActiveNav } from "./index.js";
 import { mainContent } from "./utils.js";
 // import { mainContent } from "./utils";
 
@@ -6,7 +6,6 @@ const currMonth = document.querySelector(".current-month");
 
 const prevMonthBtn = document.querySelector(".prev-month");
 
-console.log("prevMonthBtn", prevMonthBtn);
 const nextMonthBtn = document.querySelector(".next-month");
 const sun = document.querySelector(".sun-container");
 const mon = document.querySelector(".mon-container");
@@ -111,7 +110,6 @@ function setMonth(side) {
 }
 
 function createDays(days, activeDay) {
-  console.log("createDays");
   sun.innerText =
     mon.innerText =
     tue.innerText =
@@ -129,7 +127,6 @@ function createDays(days, activeDay) {
     item === 1 && setAnotherDaysToBeDownOnTheScreen(date);
 
     el = getWeekDay(date);
-    console.log("getWeekDay", "daejae");
 
     const span = document.createElement("span");
     span.classList.add("date-day");
@@ -241,7 +238,7 @@ function getWeekDay(day) {
       el =
         document.querySelector(".wed-container") &&
         document.querySelector(".wed-container");
-      console.log("thu el", el);
+
       break;
     case "Thu":
       el =
@@ -284,7 +281,6 @@ export function clickEachDay() {
     if (e.target.classList.contains("date-day")) {
       const el = e.target;
       if (document.querySelector(".selected-date")) {
-        console.log("var");
         document
           .querySelector(".selected-date")
           .classList.remove("selected-date");
@@ -295,6 +291,9 @@ export function clickEachDay() {
       month = (currentMonth + 1).toString().length === 1 ? `0${month}` : month;
       day.length === 1 ? (day = `0${day}`) : day;
       info.date = `${day}-${month}-${currentYear}`;
+      document.querySelector(
+        ".selection-time h4"
+      ).innerHTML = `${day}-${month}-${currentYear}`;
 
       const availableTimes = document.querySelector(".available-times");
       availableTimes.innerHTML = timeOptions[info.service_id - 1].options
@@ -321,8 +320,9 @@ function selectTime() {
       }
       selectedTime.classList.add("active-time");
       info.time = e.target.closest(".select-time").children[0].textContent;
-      console.log("info", info);
+
       mainContent("confirmation", step);
+      switchActiveNav(4, "up");
     }
   });
 }

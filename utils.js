@@ -1,18 +1,31 @@
 const main = document.querySelector(".main-content__result");
+const prevBtn = document.querySelector(".back-btn");
+
 import { services, staffs } from "./data.js";
 import { clickEachDay, initDatePicker } from "./date-picker.js";
-import { info, init, step, switchActiveNav } from "./index.js";
+import {
+  info,
+  init,
+  reloadApp,
+  switchActiveNav,
+  step as step1,
+  prevStep,
+} from "./index.js";
+
 const mainHeader = document.querySelector(".main-content__header");
 const nextBtn = document.querySelector(".next-btn");
 const modalContent = document.querySelector(".modal-content");
-const modalOverlay = document.querySelector(".modal-overlay");
-// import { select } from "./index.js";
+const modalContainer = document.querySelector(".modal-container");
 
 export function mainContent(key, step) {
-  console.log("step " + step);
-  console.log("key: " + key);
   main.innerHTML = "";
   let content = "";
+
+  let currentUrl = new URL(window.location.href);
+
+  // let stepValue = currentUrl.searchParams.get("step");
+
+  // let step = parseInt(stepValue, 10);
 
   switch (key) {
     case "staff_id":
@@ -29,6 +42,7 @@ export function mainContent(key, step) {
   </div>`
         )
         .join("");
+      currentUrl.searchParams.set("step", "1");
       break;
     case "service_id":
       main.innerHTML = "";
@@ -45,25 +59,33 @@ export function mainContent(key, step) {
                 <h5>${service.duration}</h5>
             </div>
             </div>
-            <div class="price">price</div>
+            <div class="price">₼ <span>${service.price}</span></div>
           </div>`
         )
         .join("");
+      prevBtn.style.display = "block";
+      currentUrl.searchParams.set("step", "2");
+
       break;
     case "date":
+      currentUrl.searchParams.set("step", "3");
       document.getElementById("date").style.display = "flex";
+      document.querySelector(".selection-time h4").textContent = "Select date";
       main.style.display = "none";
-
-      mainContent.innerHTML = "";
+      // prevStep(3);
+      // mainContent.innerHTML = "";
       initDatePicker();
       clickEachDay();
       break;
     case "confirmation":
+      console.log("step in confirmation", step);
+      prevStep(4);
+
       nextBtn.classList.add("hide");
       document.getElementById("date").style.display = "none";
       mainHeader.innerHTML = `Select ${"Confirmation"}`;
-      step = step + 1;
-      switchActiveNav(step);
+      // step = step + 1;
+      switchActiveNav(step, "up");
       main.style.display = "flex";
       main.innerHTML = "";
       console.log("info", info);
@@ -92,7 +114,9 @@ export function mainContent(key, step) {
             <label for="phone">Phone</label>
             <input type="text" id="phone" class="input" />
           </div>
-          <button type="submit" class="btn confirm-btn">CONFIRM BOOKING</button>
+          <button type="submit" class="btn confirm-btn">
+
+          CONFIRM BOOKING</button>
         </form>
       </div>
       <div class="confirmation-bottom">
@@ -110,9 +134,11 @@ export function mainContent(key, step) {
 
 
       `;
+      currentUrl.searchParams.set("step", "4");
   }
 
   main.innerHTML = content;
+  window.history.replaceState({}, "", currentUrl.href);
 }
 
 function confirmBooking() {
@@ -120,25 +146,23 @@ function confirmBooking() {
   const surname = document.getElementById("last-name").value;
   const email = document.getElementById("email").value;
   const phone = document.getElementById("phone").value;
-  modalOverlay.style.display = "block";
-  if (!name || !surname || !email || !phone) {
-    console.log("no overlay");
 
-    modalContent.textContent = "Please fill all the required fields";
+  toggleModal();
+  if (!name || !surname || !email || !phone) {
+    modalContent.firstChild.textContent = "Please fill all the required fields";
+    modalContent.style.color = "#F39C12";
   } else {
-    modalContent.textContent = "Confirmation successfully completed";
+    modalContent.firstChild.textContent = "Confirmation successfully completed";
+    modalContent.style.color = "#38CF78";
+
     info.customer.name = name;
     info.customer.surname = surname;
     info.customer.email = email;
     info.customer.phone = phone;
     console.log("info", info);
     console.log("clicked");
-    // init();
+    reloadApp();
   }
-  setTimeout(() => {
-    modalOverlay.style.display = "none";
-    // modalContent.textContent = "Please fill all the required fields";
-  }, 2000);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -148,4 +172,13 @@ document.addEventListener("DOMContentLoaded", () => {
       confirmBooking();
     }
   });
+});
+
+function toggleModal() {
+  const modal = document.getElementById("myModal");
+  modal.classList.toggle("active");
+}
+
+document.getElementById("closeModal").addEventListener("click", (e) => {
+  toggleModal();
 });

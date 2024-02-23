@@ -4,13 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script defer src="utils.js" type="module"></script>
     <script defer src="date-picker.js" type="module"></script>
     <script defer src="index.js" type="module"></script>
     <title>Online Booking Reservation</title>
   </head>
   <body>
-    <div class="modal-overlay">
-      <div class="modal-content">COnfirm</div>
+    <div class="modal-container" id="myModal">
+      <div class="modal-content">
+        <p></p>
+        <button id="closeModal" onclick="toggleModal()">&times;</button>
+      </div>
     </div>
     <section class="container">
       <div class="navigation"></div>
@@ -86,7 +94,10 @@
         <footer class="main-content__footer">
           <!-- <button class="btn next-btn">NEXT</button> -->
           <button class="btn back-btn">BACK</button>
-          <button class="btn select-btn"></button>
+          <button class="btn select-btn">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Select</span>
+          </button>
           <button class="btn next-btn">NEXT</button>
         </footer>
       </div>
