@@ -34,7 +34,7 @@ function nextStep() {
   const elements = document.querySelectorAll(".nav-item");
   stepObj.step < 4 ? (next = stepObj.step + 1) : (next = 3);
   const keyword = navLists.find((item) => item.step === stepObj.step).keyword;
-  console.log("keyword", keyword, info);
+  // console.log("keyword", keyword, info);
 
   // eger step seçilməyibsə select warning-i işə düşsün
   if (!info[keyword]) {
@@ -44,6 +44,7 @@ function nextStep() {
     setTimeout(() => selectBtn.classList.remove("show"), 3000);
   } else {
     const el = document.querySelector(".active-option");
+    console.log("step: " + stepObj.step, next);
 
     switch (next) {
       case 2:
@@ -83,6 +84,7 @@ export function prevStep() {
     delete info[key];
   });
   info = { ...updatedInfo };
+  // console.log("prev", info);
 
   // stepin navigation-ı dəyişsin
   switchActiveNav(stepObj.step, "down");

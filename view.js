@@ -75,8 +75,8 @@ export function mainContent(key, step) {
       main.style.display = "flex";
       main.innerHTML = "";
 
-      const dr = staffs.find((item) => item.id === +info.staff_id);
-      const doctorName = staffs.find((item) => console.log("staff", item));
+      const dr = staffs.find((item) => item.id === +info?.staff_id);
+      // const doctorName = staffs.find((item) => console.log("staff", item));
 
       const servicePrice = services.find(
         (item) => item.id === +info.service_id
@@ -111,7 +111,7 @@ export function mainContent(key, step) {
       <div class="reservation-info">
     <h3>Note</h3>
     <div class="reservation">
-      <p><span>Staff:</span>${dr.name}</p>
+      <p><span>Staff:</span>${dr?.name}</p>
       <p><span>Service:</span>${info.service_id}</p>
       <p><span>Date:</span>${info.date} / ${info.time}</p>
       <p><span>Price:</span>₼ ${servicePrice}</p>
