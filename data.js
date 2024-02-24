@@ -29,3 +29,40 @@ export const services = [
     price: 120.0,
   },
 ];
+
+export const timeOptions = [
+  {
+    service: 1,
+    options: [
+      {
+        startDate: "09:00",
+        endDate: "10:00",
+      },
+      {
+        startDate: "10:00",
+        endDate: "11:00",
+      },
+      {
+        startDate: "11:00",
+        endDate: "12:00",
+      },
+    ],
+  },
+  {
+    service: 2,
+    options: [
+      {
+        startDate: "09:00",
+        endDate: "10:30",
+      },
+      {
+        startDate: "10:30",
+        endDate: "12:00",
+      },
+      {
+        startDate: "12:00",
+        endDate: "13:30",
+      },
+    ],
+  },
+];

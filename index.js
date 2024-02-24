@@ -6,12 +6,8 @@ const selectBtn = document.querySelector(".select-btn");
 const main = document.querySelector(".main-content__result");
 const navItemCounts = document.querySelectorAll(".nav-item__count");
 
-import { staffs } from "./data.js";
-import { initDatePicker } from "./date-picker.js";
-// import { initDatePicker } from "./date-picker.js";
-
-import { mainContent } from "./utils.js";
-// import { currentStep } from "./utils.js";
+import { iterateObj } from "./utils.js";
+import { mainContent } from "./view.js";
 
 const navLists = [
   { name: "Staff", step: 1, keyword: "staff_id" },
@@ -19,95 +15,93 @@ const navLists = [
   { name: "Date & Time", step: 3, keyword: "date" },
   { name: "Confirmation", step: 4, keyword: "confirmation" },
 ];
-export let step = 1;
-let next = step + 1;
+
+export const stepObj = { step: 1 };
+let next = stepObj.step + 1;
 let keyword = "service_id";
 let currentUrl = new URL(window.location.href);
 
 export let info = {
-  customer: {},
-  date: "",
-  service_id: null,
   staff_id: null,
+  service_id: null,
+  date: "",
   time: "",
+  customer: {},
 };
 
+// ireli buttonu click olanda
 function nextStep() {
-  // console.log(" step " + step);
-  // const nextStep = step + 1;
-  // console.log("nextstep ", nextStep, keyword);
   const elements = document.querySelectorAll(".nav-item");
-  let stepValue = currentUrl.searchParams.get("step");
-  console.log("stepValue", stepValue);
-  step = parseInt(stepValue, 10);
-  step < 4 ? (next = step + 1) : (next = 3);
+  stepObj.step < 4 ? (next = stepObj.step + 1) : (next = 3);
+  const keyword = navLists.find((item) => item.step === stepObj.step).keyword;
+  console.log("keyword", keyword, info);
 
-  console.log("next", step, next);
-
+  // eger step seçilməyibsə select warning-i işə düşsün
   if (!info[keyword]) {
     selectBtn.classList.add("show");
-    const name = navLists.find((item) => item.step === step).name;
+    const name = navLists.find((item) => item.step === stepObj.step).name;
     document.querySelector(".select-btn span").textContent = `Select ${name}`;
     setTimeout(() => selectBtn.classList.remove("show"), 3000);
   } else {
     const el = document.querySelector(".active-option");
-    console.log("curstep", step, next);
+
     switch (next) {
       case 2:
         if (info.staff_id && el) {
-          mainContent("service_id");
-          // step++;
-        }
-      case 3:
-        if (info.service_id && el) {
-          mainContent("date");
-          // step++;
-          // step = 3;
-        }
-      case 4:
-        if (info.date) {
-          mainContent("confirmation");
-
-          // step = 4;
+          stepObj.step = 2;
+          mainContent("service_id", stepObj.step);
         }
         break;
+      case 3:
+        if (info.service_id && el) {
+          stepObj.step = 3;
+          mainContent("date", stepObj.step);
+        }
+        break;
+      case 4:
+        if (info.date && info.time) {
+          stepObj.step = 4;
+          mainContent("confirmation", stepObj.step);
+        }
     }
-    switchActiveNav(step, "up");
+    // stepin navigation-ı dəyişsin
+    switchActiveNav(stepObj.step, "up");
 
-    step > 1 && prevBtn.classList.add("show");
-    // window.location.hash = item.childNodes[1].textContent.trim().toLowerCase();
-    // mainHeader.innerHTML = `Select ${item.childNodes[1].textContent}`;
+    // eger step 1 den yuxarıdırsa back buttonu ui-de görsənsin
+    stepObj.step > 1 && prevBtn.classList.add("show");
   }
 }
-export function prevStep(incomingStep) {
-  console.log("incoming step", incomingStep);
-  if (incomingStep) {
-    step = incomingStep;
-  } else {
-    if (step > 1) {
-      console.log("step_1", step);
-      step--;
-      console.log("step_2", step);
-    }
-  }
-  // step < 4 ? (next = step + 1) : (next = 3);
-  // console.log("prev", step, next);
 
-  switchActiveNav(step, "down");
-  keyword = navLists.find((item) => item.step === step).keyword;
+// Geri buttonu click olanda
+export function prevStep() {
+  // stepi  1 vahid azalt
+  stepObj.step = stepObj.step - 1;
 
-  const headerName = navLists.find((item) => item.step === step).name;
+  //iterate et ve obyekti update et
+  const updatedInfo = iterateObj(info, stepObj.step);
+  Object.keys(info).forEach((key) => {
+    delete info[key];
+  });
+  info = { ...updatedInfo };
+
+  // stepin navigation-ı dəyişsin
+  switchActiveNav(stepObj.step, "down");
+  keyword = navLists.find((item) => item.step === stepObj.step).keyword;
+  // stepin headerini update et
+  const headerName = navLists.find((item) => item.step === stepObj.step).name;
+
   mainHeader.innerHTML = `Selected ${headerName}`;
-  if (step < 2) {
+  if (stepObj.step < 2) {
     prevBtn.style.display = "none";
   }
 
-  if (step === 1 || step === 2) {
+  if (stepObj.step === 1 || stepObj.step === 2) {
     if (keyword === "service_id") {
       document.getElementById("date").style.display = "none";
       main.style.display = "block";
     }
 
+    // Active option classı elavə et
     mainContent(keyword);
     document
       .querySelectorAll(".option")
@@ -116,32 +110,24 @@ export function prevStep(incomingStep) {
           item.dataset.id === info[keyword] &&
           item.classList.add("active-option")
       );
+    //  geri qayıdanda available times ui-ı sıfırlansın
     document.querySelector(".available-times").innerHTML = "";
   }
-  if (step === 3) {
+  if (stepObj.step === 3) {
     document.getElementById("date").style.display = "flex";
     main.style.display = "none";
     nextBtn.classList.remove("hide");
   }
-  if (step > 1) {
+
+  // eger step 1 den yuxarıdırsa back buttonu ui-de görsənsin
+  if (stepObj.step > 1) {
     prevBtn.classList.add("show");
   }
-  // document.querySelectorAll(".nav-item").forEach((item, i) => {
-  //   // if(+item.childNodes[0].textContent){
-
-  //   // }
-  //   if (i + 1 > step) {
-  //     // // +item.childNodes[0].textContent === "";
-  //     // item.childNodes[0].style.backgroundColor === "red";
-  //   }
-  // });
 }
 
-function navClick() {
-  nextBtn.addEventListener("click", nextStep);
-}
-
+// səhifə restart olanda bu funksiya işə düşsün
 export function init() {
+  // tab-ların yaradılması
   navLists.map((item, i) => {
     const div = document.createElement("div");
     const span = document.createElement("span");
@@ -155,18 +141,24 @@ export function init() {
       mainHeader.innerHTML = `Select ${item.name}`;
     }
     navigation.insertAdjacentElement("beforeend", div);
+    // Contentin dəyişilməsi
     mainContent("staff_id");
   });
-  navClick();
+
+  // next buttonu click olanda
+  nextBtn.addEventListener("click", nextStep);
 }
 
+// Navigation tabları arasında switch edən funksiya
 export function switchActiveNav(step, direction) {
   const elements = document.querySelectorAll(".nav-item");
-  const activeNav = document.querySelector(".active");
+  const activeNav = document.querySelector(".nav-item.active");
   activeNav.classList.remove("active");
 
   [...elements].forEach((item, i) => {
-    i + 1 === step && item.classList.add("active");
+    if (step === i + 1) {
+      item.classList.add("active");
+    }
     if (direction === "up") {
       if (i + 1 < step) {
         item.childNodes[0].innerHTML = `<i class="fa-solid fa-check"></i>`;
@@ -183,6 +175,7 @@ export function switchActiveNav(step, direction) {
   step > 1 && prevBtn.classList.add("show");
 }
 
+// Hər option click olanda optionun seçilməsi
 function select(e) {
   if (e.target.closest(".option")) {
     const el = e.target.closest(".option");
@@ -193,19 +186,20 @@ function select(e) {
     el.classList.add("active-option");
     info[el.dataset.name] = el.dataset.id;
 
-    step++;
-    keyword = navLists.find((item) => item.step === step).keyword;
+    stepObj.step = stepObj.step + 1;
+
+    keyword = navLists.find((item) => item.step === stepObj.step).keyword;
     const name = navLists.find((item) => item.keyword === keyword).name;
     mainHeader.innerHTML = `Select ${name}`;
-    mainContent(keyword, step);
 
-    switchActiveNav(step, "up");
-    // nextStep(step);
+    mainContent(keyword, stepObj.step);
+    switchActiveNav(stepObj.step, "up");
   }
 }
 
+// confirmation başa çatandan sonra bu funksiya işə düşür və UI sıfırlanlır
 export function reloadApp() {
-  step = 1;
+  stepObj.step = 1;
   let keyword = "service_id";
   info = {
     customer: {},
@@ -219,7 +213,7 @@ export function reloadApp() {
   document.querySelector(".active-time").classList.remove("active-time");
 
   nextBtn.classList.remove("hide");
-  prevBtn.classList.remove("show");
+  prevBtn.style.display = "none";
 
   init();
 }

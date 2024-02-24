@@ -1,6 +1,6 @@
-import { info, step, switchActiveNav } from "./index.js";
-import { mainContent } from "./utils.js";
-// import { mainContent } from "./utils";
+import { info, stepObj, switchActiveNav } from "./index.js";
+import { mainContent } from "./view.js";
+import { timeOptions } from "./data.js";
 
 const currMonth = document.querySelector(".current-month");
 
@@ -36,43 +36,6 @@ const months = [
   "October",
   "November",
   "December",
-];
-
-const timeOptions = [
-  {
-    service: 1,
-    options: [
-      {
-        startDate: "09:00",
-        endDate: "10:00",
-      },
-      {
-        startDate: "10:00",
-        endDate: "11:00",
-      },
-      {
-        startDate: "11:00",
-        endDate: "12:00",
-      },
-    ],
-  },
-  {
-    service: 2,
-    options: [
-      {
-        startDate: "09:00",
-        endDate: "10:30",
-      },
-      {
-        startDate: "10:30",
-        endDate: "12:00",
-      },
-      {
-        startDate: "12:00",
-        endDate: "13:30",
-      },
-    ],
-  },
 ];
 
 function setMonth(side) {
@@ -120,6 +83,14 @@ function createDays(days, activeDay) {
       "";
   const arr = Array.from({ length: days }, (x, i) => i + 1);
   arr.forEach((item) => {
+    if (new Date(Date.now()).getFullYear() === currentYear) {
+      if (
+        new Date(Date.now()).getMonth() <
+        new Date(currentYear, currentMonth, item).getMonth()
+      ) {
+      }
+    }
+
     /// day 1 yeni ayin birinci gunu hansi hefte gunune dusurse ondan evvelki hefte gunlerine aid gunleri 1rem asagi salmaq
     const date = new Date(currentYear, currentMonth, item)
       .toDateString()
@@ -127,8 +98,24 @@ function createDays(days, activeDay) {
     item === 1 && setAnotherDaysToBeDownOnTheScreen(date);
 
     el = getWeekDay(date);
+    const thisYear = new Date(Date.now()).getFullYear();
+    const thisMonth = new Date(Date.now()).getMonth();
+    const thisDate = new Date(Date.now()).getDate();
 
     const span = document.createElement("span");
+    const spanMonth = new Date(currentYear, currentMonth, item).getMonth();
+    const spanDate = new Date(currentYear, currentMonth, item).getDate();
+    if (thisYear === currentYear) {
+      if (thisMonth > spanMonth) {
+        span.style.pointerEvents = "none";
+        span.classList.add("not-allowed");
+        // span.style.cursor = "not-allowed";
+      }
+      if (thisMonth === spanMonth && thisDate > spanDate) {
+        span.style.pointerEvents = "none";
+        span.classList.add("not-allowed");
+      }
+    }
     span.classList.add("date-day");
     if (item == activeDay) {
       span.classList.add("active");
@@ -274,7 +261,7 @@ nextMonthBtn?.addEventListener("click", () => {
 });
 
 // each date is clicked
-
+// her date secilende
 export function clickEachDay() {
   const dateDays = document.querySelectorAll(".date-day");
   document.querySelector(".date-container").addEventListener("click", (e) => {
@@ -311,6 +298,7 @@ export function clickEachDay() {
   });
 }
 
+// time secilmesi
 function selectTime() {
   window.addEventListener("click", (e) => {
     const selectedTime = e.target.closest(".select-time");
@@ -321,8 +309,9 @@ function selectTime() {
       selectedTime.classList.add("active-time");
       info.time = e.target.closest(".select-time").children[0].textContent;
 
-      mainContent("confirmation", step);
-      switchActiveNav(4, "up");
+      stepObj.step = 4;
+      mainContent("confirmation", stepObj.step);
+      switchActiveNav(stepObj.step, "up");
     }
   });
 }

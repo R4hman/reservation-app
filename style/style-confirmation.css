@@ -1,0 +1,59 @@
+.confirmation {
+  width: 100% !important;
+  height: 100% !important;
+}
+.confirmation-form {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
+}
+.inp {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.inp label {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0px;
+  text-align: left;
+}
+
+.input {
+  border: 1px solid #e3eaf3;
+  width: 335px;
+  padding: 10px;
+}
+
+/* reservation info */
+.reservation-info h3 {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0px;
+  text-align: left;
+  margin-bottom: 9px;
+}
+.reservation {
+  background-color: white;
+  padding: 13px 26px;
+}
+.reservation span {
+  color: #6c70dc;
+  margin-right: 10px;
+}
+
+.confirm-btn {
+  background: #6c70dc;
+  color: white;
+  outline: none;
+  border: none;
+  margin-left: auto;
+  position: absolute;
+  right: 0;
+  bottom: -16rem;
+}

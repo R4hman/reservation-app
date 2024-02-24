@@ -1,0 +1,90 @@
+@media screen and (max-width: 700px) {
+  body {
+    font-size: 14px;
+    overflow: auto;
+  }
+  .container {
+    width: 500px !important;
+    flex-direction: column;
+    margin-bottom: 6rem;
+  }
+  .navigation {
+    display: flex;
+    width: 100%;
+    gap: 6px;
+    align-items: center !important;
+    justify-content: center !important;
+    padding-bottom: 0.5rem;
+  }
+  .main-content {
+    height: 900px !important;
+  }
+  .main-content__header {
+    text-align: center !important;
+  }
+  #date {
+    flex-direction: column;
+    align-items: center;
+  }
+  .main-right__part {
+    height: 900px;
+    width: 100% !important;
+    margin-top: 1rem;
+  }
+
+  .confirm-btn {
+    bottom: -16.5rem;
+  }
+  .input {
+    width: 200px;
+  }
+  .selection-time {
+    height: 200px !important;
+    margin-bottom: 2rem;
+  }
+}
+
+@media screen and (min-width: 700px) and (max-width: 930px) {
+  body {
+    font-size: 18px;
+    overflow: auto;
+  }
+  #date {
+    flex-direction: column;
+    align-items: center;
+  }
+  .reservation {
+    margin-top: 5rem;
+  }
+  .confirm-btn {
+    bottom: -4.5rem;
+  }
+
+  .selection-time {
+    height: 200px !important;
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+}
+@media screen and (min-width: 815px) {
+  .input {
+    width: 270px;
+  }
+}
+
+@media screen and (min-width: 901px) {
+  body {
+    font-size: 20px;
+  }
+  .input {
+    width: 270px;
+  }
+  .select-time {
+    padding: 18px 14px;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .input {
+    width: 335px;
+  }
+}
